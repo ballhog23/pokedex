@@ -21,12 +21,21 @@ export function startREPL() {
 
         const commandName = input[0];
         const commands = getCommands();
-        const command = commands[commandName] || false;
+        const command = commands[commandName];
         if (!command) {
-            console.log(`Unknown Command`);
+            console.log(
+                `Unknown command: "${commandName}". Type "help" for a list of commands.`,
+            );
+            rl.prompt();
+            return;
         }
 
-        command.callback(commands)
+        try {
+            command.callback(commands);
+        } catch (error) {
+            console.log(error)
+        }
+
         rl.prompt();
     });
 }
