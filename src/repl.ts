@@ -1,5 +1,4 @@
 import type { State } from "./commands/state.js";
-import { getCommands } from "./commands/commands.js";
 
 export function startREPL(state: State) {
     const rl = state.readline;
@@ -21,7 +20,13 @@ export function startREPL(state: State) {
             rl.prompt();
             return;
         }
-        command.callback(state);
+
+        try {
+            command.callback(state);
+        } catch (error) {
+            console.log(error)
+        }
+
         rl.prompt();
     });
 }
