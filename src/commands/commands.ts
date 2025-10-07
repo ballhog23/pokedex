@@ -1,4 +1,4 @@
-import type { CLICommand, CommandRegistry } from "./command.js";
+import type { State, CLICommand, CommandRegistry } from "./state.js";
 import { commandExit } from "./command-exit.js";
 import { commandHelp } from "./command-help.js";
 

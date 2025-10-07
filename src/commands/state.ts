@@ -1,4 +1,3 @@
-import type { CommandRegistry } from "./command.js"
 import type { Interface } from "node:readline"
 import { createInterface } from "node:readline"
 import { stdin, stdout } from 'node:process';
@@ -9,12 +8,19 @@ export type State = {
     commandRegistry: CommandRegistry
 }
 
+export type CLICommand = {
+    name: string,
+    description: string,
+    callback: (state: State) => void;
+}
+
+export type CommandRegistry = Record<string, CLICommand>;
+
 export function initState() {
     const rl = createInterface({
         input: stdin,
         output: stdout,
         prompt: 'Pokedex > ',
-        terminal: true,
     });
 
     const state: State = {

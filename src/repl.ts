@@ -4,15 +4,15 @@ export function startREPL(state: State) {
     const rl = state.readline;
     rl.prompt();
 
-    rl.on('line', (line) => {
+    rl.on('line', async (line) => {
         const input = cleanInput(line);
         if (input.length === 0) {
             rl.prompt();
             return;
         }
 
-        const commandRegistry = state.commandRegistry;
         const commandName = input[0];
+        const commandRegistry = state.commandRegistry;
         const command = commandRegistry[commandName];
 
         if (!command) {
