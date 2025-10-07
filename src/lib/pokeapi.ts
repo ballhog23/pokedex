@@ -5,57 +5,101 @@ export class PokeAPI {
     };
 
     async fetchLocations(pageURL?: string) {
-        const options: RequestInit = {
-            'method': "GET",
-            'headers': {
-                'User-Agent': 'pokedex'
+        const url = pageURL || `${PokeAPI.baseURL}/location-area`;
+
+        try {
+            const res = await fetch(url);
+
+            if (!res.ok) {
+                throw new Error(`${res.status} ${res.statusText}`);
             }
+
+            const data: ShallowLocations = await res.json();
+
+            return data;
+        } catch (err) {
+            console.log(`Error: ${err instanceof Error ? err.message : err}`);
         }
-
-        let url = null;
-
-        if (pageURL) url = pageURL;
-        else url = `${PokeAPI.baseURL}/location-area`;
-
-        const res = await fetch(url, options);
-
-        if (!res.ok) {
-            throw new Error(`Error retrieving data from endpoint: ${PokeAPI.baseURL}/${pageURL}`);
-        }
-
-        const data: NamedAPIResourceList = await res.json();
-
-        return data;
     }
 
     async fetchLocation(locationName: string) {
-        const options: RequestInit = {
-            'method': "GET",
-            'headers': {
-                'User-Agent': 'pokedex'
+        const url = `${PokeAPI.baseURL}/location/${locationName}`;
+
+        try {
+            const res = await fetch(url);
+
+            if (!res.ok) {
+                throw new Error(`Error retrieving location: ${PokeAPI.baseURL}/location/${locationName}`);
             }
+
+            const data: Location = await res.json();
+
+            return data;
+        } catch (err) {
+            console.log(`Error: ${err instanceof Error ? err.message : err}`);
         }
-
-        const res = await fetch(`${PokeAPI.baseURL}/location/${locationName}`, options);
-
-        if (!res.ok) {
-            throw new Error(`Error retrieving location: ${PokeAPI.baseURL}/location/${locationName}`);
-        }
-
-        const data: NamedAPIResourceList = await res.json();
-
-        return data;
     }
 }
 
-export type NamedAPIResourceList = {
-    count: number,
-    next: string | null,
-    previous: string | null,
-    results: NamedAPIRescource[]
-}
+export type ShallowLocations = {
+    count: number;
+    next: string;
+    previous: string;
+    results: {
+        name: string;
+        url: string;
+    }[];
+};
 
-export type NamedAPIRescource = {
-    name: string,
-    url: string
-}
+export type Location = {
+    encounter_method_rates: {
+        encounter_method: {
+            name: string;
+            url: string;
+        };
+        version_details: {
+            rate: number;
+            version: {
+                name: string;
+                url: string;
+            };
+        }[];
+    }[];
+    game_index: number;
+    id: number;
+    location: {
+        name: string;
+        url: string;
+    };
+    name: string;
+    names: {
+        language: {
+            name: string;
+            url: string;
+        };
+        name: string;
+    }[];
+    pokemon_encounters: {
+        pokemon: {
+            name: string;
+            url: string;
+        };
+        version_details: {
+            encounter_details: {
+                chance: number;
+                condition_values: any[];
+                max_level: number;
+                method: {
+                    name: string;
+                    url: string;
+                };
+                min_level: number;
+            }[];
+            max_chance: number;
+            version: {
+                name: string;
+                url: string;
+            };
+        }[];
+    }[];
+};

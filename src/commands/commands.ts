@@ -1,8 +1,7 @@
-import type { State, CLICommand, CommandRegistry } from "./state.js";
+import type { CLICommand, CommandRegistry } from "./state.js";
 import { commandExit } from "./command-exit.js";
 import { commandHelp } from "./command-help.js";
-import { commandMap } from "./command-map.js";
-import { commandMapB } from "./command-mapb.js";
+import { commandMap, commandMapB } from "./command-map.js";
 
 export function getCommands(): CommandRegistry {
     return {
