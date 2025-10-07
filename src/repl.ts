@@ -22,9 +22,9 @@ export function startREPL(state: State) {
         }
 
         try {
-            command.callback(state);
+            await command.callback(state);
         } catch (error) {
-            console.log(error)
+            console.log(`Error: ${error instanceof Error ? error.message : error}`);
         }
 
         rl.prompt();
