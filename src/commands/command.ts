@@ -1,6 +1,9 @@
-export type Command = 'exit' | 'help';
+import type { State } from "./state.js";
+
 export type CLICommand = {
     name: string,
     description: string,
-    callback: (commands: Record<string, CLICommand>) => void;
+    callback: (state: State) => void;
 }
+
+export type CommandRegistry = Record<string, CLICommand>;
