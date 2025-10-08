@@ -20,9 +20,8 @@ export function startREPL(state: State) {
             rl.prompt();
             return;
         }
-
         try {
-            await command.callback(state);
+            await command.callback(state, ...input.slice(1));
         } catch (error) {
             console.log(`Error: ${error instanceof Error ? error.message : error}`);
         }
@@ -32,5 +31,9 @@ export function startREPL(state: State) {
 }
 
 export function cleanInput(input: string): string[] {
-    return input.toLowerCase().match(/\w+/gim) || [];
+    return input
+        .toLowerCase()
+        .trim()
+        .split(" ")
+        .filter((word) => word !== "");
 }
