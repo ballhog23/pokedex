@@ -1,11 +1,26 @@
+import { Cache } from "./pokecache.js";
+
 export class PokeAPI {
     private static readonly baseURL = "https://pokeapi.co/api/v2";
+    private cache: Cache;
 
-    constructor() {
+    constructor(interval: number) {
+        this.cache = new Cache(interval);
     };
 
-    async fetchLocations(pageURL?: string) {
+    closeCache() {
+        this.cache.stopReapLoop();
+    }
+
+    async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
         const url = pageURL || `${PokeAPI.baseURL}/location-area`;
+
+        // check cache for locations requested
+        const cached = this.cache.get<ShallowLocations>(url);
+        if (cached) {
+            console.log('fetching locations from cache');
+            return cached;
+        }
 
         try {
             const res = await fetch(url);
@@ -14,16 +29,24 @@ export class PokeAPI {
                 throw new Error(`${res.status} ${res.statusText}`);
             }
 
-            const data: ShallowLocations = await res.json();
+            const locations: ShallowLocations = await res.json();
 
-            return data;
+            // adds locations to cache if not present
+            console.log('adding locations to cache')
+            this.cache.add(url, locations);
+
+            return locations;
+
         } catch (err) {
-            console.log(`Error: ${err instanceof Error ? err.message : err}`);
+            throw new Error(`Error: ${err instanceof Error ? err.message : err}`)
         }
     }
 
-    async fetchLocation(locationName: string) {
+    async fetchLocation(locationName: string): Promise<Location> {
         const url = `${PokeAPI.baseURL}/location/${locationName}`;
+
+        const cached = this.cache.get<Location>(url);
+        if (cached) return cached;
 
         try {
             const res = await fetch(url);
@@ -32,11 +55,12 @@ export class PokeAPI {
                 throw new Error(`Error retrieving location: ${PokeAPI.baseURL}/location/${locationName}`);
             }
 
-            const data: Location = await res.json();
+            const location: Location = await res.json();
+            this.cache.add<Location>(url, location);
+            return location;
 
-            return data;
         } catch (err) {
-            console.log(`Error: ${err instanceof Error ? err.message : err}`);
+            throw new Error(`Error: ${err instanceof Error ? err.message : err}`)
         }
     }
 }
