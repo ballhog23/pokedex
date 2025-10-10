@@ -5,6 +5,7 @@ import { commandMap, commandMapB } from "./command-map.js";
 import { commandExplore } from "./command-explore.js";
 import { commandCatch } from "./command-catch.js";
 import { commandInspect } from "./command-inspect.js";
+import { commandPokedex } from "./command-pokedex.js";
 
 export function getCommands(): CommandRegistry {
     return {
@@ -39,9 +40,15 @@ export function getCommands(): CommandRegistry {
             callback: commandCatch
         },
         inspect: {
-            name: 'inspect <pokemon_name',
+            name: 'inspect <pokemon_name>',
             description: 'inspect a pokemon',
             callback: commandInspect
-        }
+        },
+        pokedex: {
+            name: 'pokedex',
+            description: 'print your pokedex',
+            callback: commandPokedex
+        },
+
     }
 }
