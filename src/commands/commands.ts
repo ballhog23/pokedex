@@ -4,6 +4,7 @@ import { commandHelp } from "./command-help.js";
 import { commandMap, commandMapB } from "./command-map.js";
 import { commandExplore } from "./command-explore.js";
 import { commandCatch } from "./command-catch.js";
+import { commandInspect } from "./command-inspect.js";
 
 export function getCommands(): CommandRegistry {
     return {
@@ -36,6 +37,11 @@ export function getCommands(): CommandRegistry {
             name: 'catch <pokemon_name>',
             description: 'catch a pokemon',
             callback: commandCatch
+        },
+        inspect: {
+            name: 'inspect <pokemon_name',
+            description: 'inspect a pokemon',
+            callback: commandInspect
         }
     }
 }

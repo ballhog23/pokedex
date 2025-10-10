@@ -1,9 +1,8 @@
-import { State } from "./state.js";
+import type { State } from "./state.js";
 
 export async function commandCatch(state: State, ...args: string[]) {
     if (args.length !== 1) {
-        console.log(`usage: catch <pokemon_name>`);
-        return;
+        throw new Error(`usage: catch <pokemon_name>`);
     }
 
     const pokemonString = args[0];
